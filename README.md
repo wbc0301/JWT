@@ -2,7 +2,7 @@
 ### jwt-demo
 
 ## 操作步骤：
-  - 安装：node 环境
+  - 安装 node 环境
   - 安装 nodemon：npm i nodemon -g
   - 安装依赖包：npm i
   - 在根目录中执行：npm start
