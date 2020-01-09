@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>JWT-demo</title>
+  <style>
+    .login-wrap {
+      height: 100px;
+      width: 200px;
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="login-wrap">
+    <input type="text" placeholder="用户名" class="userName"><br>
+    <input type="password" placeholder="密码" class="password"><br><br>
+    <button class="btn">登陆</button>
+  </div>
+  <button class="btn1">获取用户名</button>
+  <p class="username"></p>
+</body>
+<script>
+
+  // 登录
+  var btn = document.querySelector('.btn');
+  btn.onclick = function () {
+    var userName = document.querySelector('.userName').value;
+    var password = document.querySelector('.password').value;
+    fetch('http://localhost:3200/login', {
+      method: 'POST',
+      body: `userName=${userName}&password=${password}`,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      mode: 'cors' // no-cors, cors, *same-origin
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (res) { // 获取到Token,将Token放在localStorage
+        document.cookie = `token=${res.data}`; // 不知这里为什么要存入 cookie 中???
+        localStorage.setItem('token', res.data);
+        localStorage.setItem('token_exp', new Date().getTime());
+      })
+      .catch(err => {
+        message.error(`本地测试错误${err.message}`);
+        console.error('本地测试错误', err);
+      });
+  }
+
+  // 获取用户名
+  var btn1 = document.querySelector('.btn1');
+  btn1.onclick = function () {
+    var username = document.querySelector('.username');
+    const token = localStorage.getItem('token');
+    fetch('http://localhost:3200/getUsername', {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      },
+      mode: 'cors' // no-cors, cors, *same-origin
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (res) {
+        console.log('返回用户信息结果', res);
+        if (res.errorMsg !== '') {
+          alert(res.errorMsg);
+          username.innerHTML = '';
+        } else {
+          username.innerHTML = `姓名：${res.data.username}`;
+        }
+      })
+      .catch(err => { console.error(err); });
+  }
+</script>
+
+</html>
