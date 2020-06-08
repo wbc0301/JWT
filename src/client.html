@@ -14,7 +14,6 @@
       padding: 20px;
       margin-bottom: 20px;
     }
-
   </style>
 </head>
 
@@ -31,15 +30,14 @@
 
   // 登录
   var btn = document.querySelector('.btn');
+
   btn.onclick = function () {
     var userName = document.querySelector('.userName').value;
     var password = document.querySelector('.password').value;
     fetch('http://localhost:3200/login', {
       method: 'POST',
       body: `userName=${userName}&password=${password}`,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       mode: 'cors' // no-cors, cors, *same-origin
     })
       .then(function (response) {
@@ -62,16 +60,13 @@
     var username = document.querySelector('.username');
     const token = localStorage.getItem('token');
     fetch('http://localhost:3200/getUsername', {
-      headers: {
-        'Authorization': 'Bearer ' + token
-      },
+      headers: { 'Authorization': 'Bearer ' + token },
       mode: 'cors' // no-cors, cors, *same-origin
     })
       .then(function (response) {
         return response.json();
       })
       .then(function (res) {
-        console.log('返回用户信息结果', res);
         if (res.errorMsg !== '') {
           alert(res.errorMsg);
           username.innerHTML = '';
